@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <select name="months" id="month">
+        <option value="1" selected>1월</option>
+        <option value="2">2월</option>
+        <option value="3">3월</option>
+        <option value="4">4월</option>
+        <option value="5">5월</option>
+        <option value="6">6월</option>
+        <option value="7">7월</option>
+        <option value="8">8월</option>
+        <option value="9">19</option>
+        <option value="10">10월</option>
+        <option value="11">11월</option>
+        <option value="12">12월</option>
+    </select>
+    <button id="addBtn">달력생성</button>
+
+    <table id="calendar" border="0.1" align="center">
+        
+    </table>
+    <input>
+</body>
+<!-- <script src="/calander.js"></script> -->
+<script>
+    const selectMonth = document.getElementById("month");
+    const btn = document.querySelector("#addBtn");
+    const today = new Date(); // 오늘 날짜
+    let month = 0;
+
+    selectMonth.addEventListener("change", (e) =>{
+        month = e.target.value-1;
+    })
+
+    btn.addEventListener("click", function(){
+        buildCalendar();
+        if(month != 11){
+            month = month +1;
+        }
+    })
+
+    function removeCalendar(e){ //ERROR: btn1 을 받아와서 e를 출력하면 btn1이 아니라 해당 태그가 출력이 된다. 왜 그런지 이유를 모르겠다.
+        if(!confirm(`${e.name}월 달력을 지우시겠습니까?`)){
+            // 아니오
+        }
+        else{
+            // 예 삭제
+            const btnRemove = document.getElementById(e.id);
+            btnRemove.parentNode.parentNode.parentNode.innerHTML = "";
+            if(month != 0){
+                month -= 1;
+            }
+        }
+
+    }
+    function buildCalendar(){
+        const doMonth = new Date(today.getFullYear(), month, 1); // month : 0 ~11
+        const lastDate = new Date(today.getFullYear(), month+1, 0); // 시작일을 0으로 하면 지난 달의 마지막 일을 가져온다
+
+        const calendar = document.getElementById("calendar");
+
+        let count = 0;
+
+        let tag = `<tr><td>${month+1}월</td> <td></td><td></td><td></td><td></td><td></td>  
+            <td><button id = btn${month+1} name=${month+1} onclick="removeCalendar(btn${month+1})">삭제</button></td></tr> <tr>
+            <td align="center"><font color ="#F79DC2">일</td>
+            <td align="center">월</td>
+            <td align="center">화</td>
+            <td align="center">수</td>
+            <td align="center">목</td>
+            <td align="center">금</td>
+            <td align="center"><font color ="skyblue">토</td>
+        </tr>  <tr>`
+        // 1일 전에 빈 공백 만들어주기
+        for (i = 0; i < doMonth.getDay(); i++) {
+            tag += "<td></td>";
+            count++;
+        }
+
+        //날짜 채우기
+        for (i = 1; i <= lastDate.getDate(); i++) {
+            if (count % 7 == 0) { tag += "<tr>"; }
+
+            tag += "<td>" + i + "<br><br>" + "<label for=\"high_price\">고가 : </label>" + "<input id=\"high_price\" type=\"text\" style=\"border:none\">" + "<br>" + 
+                    "<label for=\"low_price\">저가 : </label>" + "<input id=\"low_price\" type=\"text\" style=\"border:none\">"+ "</td>";
+            count++;
+            if (count % 7 == 0) {
+                tag += "</tr>";
+            }
+        }
+        calendar.innerHTML += tag;
+
+    }
+
+</script>
+</html>
